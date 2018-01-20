@@ -1,0 +1,29 @@
+{
+    "pages": [
+        {
+            "Name": "Edit_sign",
+            "Conditions": "true",
+            "Menu": "test",
+            "Value": "SetTitle(Edit signatures)\r\nDiv(Class: content-wrapper){\r\n    Div(Class: row df f-valign){\r\n        Div(Class: col-md-3)\r\n        Div(Class: col-md-6){\r\n            Div(Class: panel panel-primary){\r\n                Div(Class: panel-heading, Body: Edit signatures)\r\n                Form(){\r\n                    DBFind(Name: signatures, Source: ed_sig).Custom(combined){\"[#id#] #name#\"}\r\n                    Div(list-group-item){\r\n                        Div(Class: row df f-valign){\r\n                            Div(Class: col-md-3 mt-sm text-right){\r\n                                Label(Edit signatures:)\r\n                            }\r\n                            Div(Class: col-md-9 mc-sm text-left){\r\n                                Select(Name:Id, Source:ed_sig, NameColumn:combined, ValueColumn:id)\r\n                            } \r\n                        } \r\n                    }\r\n                    Div(list-group-item){\r\n                        Div(Class: row df f-valign){\r\n                            Div(Class: col-md-3 mt-sm text-right){\r\n                                Label(Value:)\r\n                            }\r\n                            Div(Class: col-md-9 mc-sm text-left){\r\n                                Input(Name: Value, Type: text)\r\n                            } \r\n                        } \r\n                    }\r\n                    Div(list-group-item){\r\n                        Div(Class: row df f-valign){\r\n                            Div(Class: col-md-3 mt-sm text-right){\r\n                                Label(Conditions)\r\n                            }\r\n                            Div(Class: col-md-9 mc-sm text-left){\r\n                                Input(Name:Conditions, Type: text)\r\n                            } \r\n                        }  \r\n                    }\r\n                    Div(panel-footer text-right){\r\n                        Button(Contract:\"EditSign\", Body: Send, Class: btn btn-primary)\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+        },
+        {
+            "Name": "CreateSign",
+            "Conditions": "true",
+            "Menu": "test",
+            "Value": "SetTitle(Signature contract create)\r\nDiv(Class: content-wrapper){\r\n    Div(Class: row df f-valign){\r\n        Div(Class: col-md-3)\r\n        Div(Class: col-md-6){\r\n            Div(Class: panel panel-primary){\r\n                Div(Class: panel-heading, Body: Create signature)\r\n                Form(){\r\n                    Div(list-group-item){\r\n                        Div(Class: row df f-valign){\r\n                            Div(Class: col-md-3 mt-sm text-right){\r\n                                Label(\"Name contract for signature:\")\r\n                            }\r\n                            Div(Class: col-md-9 mc-sm text-left){\r\n                                Input(Name: \"Name\", Type: \"text\", Placeholder: \"MoneyTransfer\")\r\n                            } \r\n                        } \r\n                    }\r\n                    Div(list-group-item){\r\n                        Div(Class: row df f-valign){\r\n                            Div(Class: col-md-3 mt-sm text-right){\r\n                                Label(\"Value:\")\r\n                            }\r\n                            Div(Class: col-md-9 mc-sm text-left){\r\n                                Input(Name: \"Value\", Type: \"text\")\r\n                            } \r\n                        } \r\n                    }\r\n                    Div(list-group-item){\r\n                        Div(Class: row df f-valign){\r\n                            Div(Class: col-md-3 mt-sm text-right){\r\n                                Label(\"Conditions:\")\r\n                            }\r\n                            Div(Class: col-md-9 mc-sm text-left){\r\n                                Input(Name: \"Conditions\", Type: \"text\")\r\n                            } \r\n                        }  \r\n                    }\r\n                    Div(panel-footer text-right){\r\n                        Button(Contract: \"NewSign\", Body: \"Send\", Class: \"btn btn-primary\")\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+        },
+        {
+            "Name": "Signatures_page",
+            "Conditions": "true",
+            "Menu": "default_menu",
+            "Value": "SetTitle(Creating contract signatures)\r\nDiv(Class: content-wrapper){\r\n    Div(Class: panel panel-heading){\r\n        Span(Body:\"Creating additional conditions for calling a contract,which will help you secure your transactions.\")\r\n    }\r\n    Div(Class: panel body){\r\n        Div(){\r\n            Button(Create signatures,Page:CreateSign,Class: btn btn-primary)\r\n        }\r\n    }\r\n    Div(){\r\n            Button(Edit signatures,Page: Edit_sign, Class: btn btn-primary)\r\n    }\r\n}"
+        }
+    ],
+    "blocks": [],
+    "menus": [],
+    "parameters": [],
+    "languages": [],
+    "contracts": [],
+    "tables": [],
+    "data": []
+}
