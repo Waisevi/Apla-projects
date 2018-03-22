@@ -1,0 +1,46 @@
+{
+    "pages": [
+        {
+            "Name": "EditAppParams",
+            "Conditions": "true",
+            "Menu": "default_menu",
+            "Value": "Div(Class: fullscreen){\r\n    DBFind(appparam, src_params).Where(\"id = #id#\").Limit(1).Vars(\"param\")\r\n    SetTitle(Edit Application Parameter)\r\n    Div(Class: breadcrumb){\r\n        LinkPage(Application Parameters, AppParams)\r\n        Span(/).Style(margin-right: 10px; margin-left: 10px;)\r\n        Span(Class: text-muted, Body: #param_name#)\r\n    }\r\n    Div(Class: fullscreen-wrapper){\r\n        Form(){\r\n            Div(Class: form-group){\r\n                Label(For: name){\r\n                    Span(Body: Name)\r\n                }\r\n                Input(Name: name, Class: form-control, Value: #param_name#)\r\n            }\r\n            Div(Class: form-group){\r\n                Input(Type: textarea, Name: value, Value: \"#param_value#\" ).Style(height: 500px !important;)\r\n            }\r\n            Div(Class: mb0 form-group){\r\n                Label(For: conditions){\r\n                    Span(Body: Change Conditions)\r\n                }\r\n                Input(Name: conditions, Class: form-control, Value: #param_conditions#)\r\n            }\r\n            Div(Class: mt-lg){\r\n                Button(Class: btn btn-primary, Body: Save, Contract:EditAppParameter, Params: \"Id=#id#,Value=Val(value),Conditions=Val(conditions)\",Page:AppParams)\r\n            }\r\n        }\r\n    }\r\n}"
+        },
+        {
+            "Name": "NewAppParams",
+            "Conditions": "true",
+            "Menu": "default_menu",
+            "Value": "Div(Class: fullscreen){\r\n    SetTitle(New Application Parameter)\r\n    Div(breadcrumb){\r\n        Span(Class: text-muted, Body: New Application Parameter)\r\n    }\r\n    Div(Class: fullscreen-wrapper){\r\n        Form(){\r\n            Div(Class: form-group){\r\n                Label(For: name){\r\n                    Span(Body: Name)\r\n                }\r\n                Input(Name: name, Class: form-control)\r\n            }\r\n            Div(Class: form-group){\r\n                Input(Type: textarea, Name: value).Style(height: 500px !important;)\r\n            }\r\n            Div(Class: mb0 form-group){\r\n                Label(For: conditions){\r\n                    Span(Body: Change Conditions)\r\n                }\r\n                Input(Name: conditions, Class: form-control)\r\n            }\r\n            Div(Class: mt-lg){\r\n                Button(Class: btn btn-primary, Body: Save, Contract:NewAppParameter, Params: \"Name=Val(name),Value=Val(value),Conditions=Val(conditions),App_id=#app_id#\",Page:AppParams)\r\n            }\r\n        }\r\n    }\r\n}"
+        },
+        {
+            "Name": "AppParams",
+            "Conditions": "true",
+            "Menu": "default_menu",
+            "Value": "Div(Class: fullscreen){\r\n    SetTitle(Application Parameters)\r\n    SetVar(application_id,Value: \"1\")\r\n\tDiv(breadcrumb){\r\n\t\tSpan(Class: text-muted, Body: Application Parameters)\r\n\t}\r\n    Div(Class: pull-right){\r\n        LinkPage(Body: Em(Class: icon icon-plus) Create, Page: NewAppParams, Class: ml btn-tool,PageParams:\"app_id=#application_id#\" )\r\n    }.Style(\r\n        height: 45px;\r\n        padding-top: 10px;\r\n        a {\r\n            float: right;\r\n        }\r\n    )\r\n    Include(pager_header)\r\n    SetVar(pager_table, parameters)\r\n    SetVar(pager_page, params_list)\r\n    Div(Class: fullscreen){\r\n        DBFind(appparam, src_appparameters).Order(id desc).Limit(10).Offset(#pager_offset#).Where(app_id = `#application_id#`).Custom(custom_actions){\r\n            Div(){\r\n                Span(){\r\n                    Button(Class: btn btn-default, Body: Em(Class: fa fa-edit), PageParams: \"id=#id#\", Page: EditAppParams)\r\n                }\r\n            }\r\n        }\r\n        Table(src_appparameters, \"Name=name,Application=app_id,Value=value,Conditions=conditions,=custom_actions\").Style(\r\n        tbody > tr:nth-of-type(odd) {\r\n            background-color: #fafbfc; \r\n        } \r\n        tbody > tr > td {\r\n            word-break: break-all;\r\n            padding: 8px 20px !important;\r\n            font-weight: 400;\r\n            font-size: 13px;\r\n            color: #666;\r\n            border-top: 1px solid #eee;\r\n            vertical-align: middle;\r\n        } \r\n        tr  > *:first-child {\r\n            padding-left:20px;\r\n            width: 160px;\r\n        }\r\n        tr  > *:last-child {\r\n            text-align:right; \r\n            padding-right:20px;\r\n            width: 300px;\r\n        }\r\n        thead {\r\n            background-color: #eee;\r\n        })\r\n        Include(pager)\r\n    }\r\n}"
+        }
+    ],
+    "blocks": [],
+    "menus": [],
+    "parameters": [],
+    "languages": [],
+    "contracts": [
+        {
+            "Name": "EditAppParameter",
+            "Value": "contract EditAppParameter {\n\t\tdata {\n\t\t\tId int\n\t\t\tValue string\n\t\t\tConditions string\n\t\t}\n\t\tconditions {\n\t\t\tRowConditions(\"appparam\", $Id)\n\t\t\tValidateCondition($Conditions, $ecosystem_id)\n\t\t}\n\t\taction {\n\t\t\tDBUpdate(\"appparam\", $Id, \"value,conditions\", $Value, $Conditions )\n\t\t}\n\t}",
+            "Conditions": "true"
+        },
+        {
+            "Name": "NewAppParameter",
+            "Value": "contract NewAppParameter {\n\t\tdata {\n\t\t\tName string\n\t\t\tValue string\n\t\t\tConditions string\n\t\t\tApp_id int\n\t\t}\n\t\tconditions {\n\t\t\tValidateCondition($Conditions, $ecosystem_id)\n\n\t\t\tvar row map\n\t\t\trow = DBRow(\"appparam\").Columns(\"id\").Where(\"name = ?\", $Name)\n\n\t\t\tif row {\n\t\t\t\twarning Sprintf( \"Parameter %s already exists\", $Name)\n\t\t\t}\n\t\t}\n\t\taction {\n\t\t\tDBInsert(\"appparam\", \"app_id,name,value,conditions\",$App_id,$Name, $Value, $Conditions )\n\t\t}\n\t}",
+            "Conditions": "true"
+        }
+    ],
+    "tables": [
+        {
+            "Name": "appparam",
+            "Columns": "[{\"name\":\"name\",\"type\":\"text\",\"conditions\":\"true\"},{\"name\":\"value\",\"type\":\"text\",\"conditions\":\"true\"},{\"name\":\"app_id\",\"type\":\"number\",\"conditions\":\"true\"},{\"name\":\"conditions\",\"type\":\"text\",\"conditions\":\"true\"}]",
+            "Permissions": "{\"insert\":\"ContractConditions(\\\"MainCondition\\\")\",\"update\":\"ContractConditions(\\\"MainCondition\\\")\",\"new_column\":\"ContractConditions(\\\"MainCondition\\\")\"}"
+        }
+    ],
+    "data": []
+}
