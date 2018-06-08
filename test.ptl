@@ -8,18 +8,18 @@ Div(content-wrapper){
 
 	Form(panel panel-default){
 		Div(panel-body){
-            Div(form-group){
-                Label("Contract name")
-                Input(Name: Name, Placeholder: "Name")
-            }		
-            Div(form-group){
-                Label("Title of confirmation")
-                Input(Name: Title, Placeholder: "Title")
-            }
-            Div(form-group){
-                Label("Conditions")
-                Input(Name: Conditions, Placeholder: "Conditions")
-            }
+			Div(form-group){
+				Label("Contract name")
+				Input(Name: Name, Placeholder: "Name")
+			}		
+			Div(form-group){
+				Label("Title of confirmation")
+				Input(Name: Title, Placeholder: "Title")
+			}
+			Div(form-group){
+				Label("Conditions")
+				Input(Name: Conditions, Placeholder: "Conditions")
+			}
 			Div(row){
 				Div(col-md-4){
 					Label(Class: text-bold, Body: "Parameter")
@@ -64,5 +64,5 @@ Div(content-wrapper){
 		Div(panel-footer){
 			Button(Body: "Save", Class: btn btn-primary, Contract: @1NewSignJoint, Page: confirmations)
 		}
-    }	
+	}	
 }
