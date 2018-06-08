@@ -1,36 +1,81 @@
-Div(fullscreen){
-    SetTitle("Export")
-    Div(breadcrumb){
-        Span(Class: text-muted, Body: "Payload was formed. You can download it now")
-    }
+Div(content-wrapper){
+	SetTitle("Export")
+	Div(breadcrumb){
+		Span(Class: text-muted, Body: "Select the application which do you want to export and proceed to the payload generation process.")
+	}
 
-    DBFind(binaries, src_binaries).Where("name='export' and member_id=#key_id# and app_id=1").Custom(app_name){
-        DBFind(Name: buffer_data, Source: src_buffer).Columns("value->app_name").Where("key='export' and member_id=#key_id#").Vars(buffer)
-        Span(#buffer_value_app_name#)
-    }
+	Include(export_link)
+	DBFind(buffer_data, src_buffer).Columns("value->app_id,value->app_name,value->menu_name,value->menu_id,value->count_menu").Where("key='export' and member_id=#key_id#").Vars(buffer)
 
-    Table(Source: src_binaries, "Applications=app_name,=data").Style(
-        tbody > tr:nth-of-type(odd) {
-            background-color: #fafbfc;
-        }
-        tbody > tr > td {
-            word-break: break-all;
-            font-weight: 400;
-            font-size: 13px;
-            color: #666;
-            border-top: 1px solid #eee;
-            vertical-align: middle;
-        }
-        tr > *:first-child {
-            padding-left:20px;
-            width: 100px;
-        }
-        tr > *:last-child {
-            padding-right:20px;
-            text-align:right;
-        }
-        thead {
-            background-color: #eee;
-        }
-    )
+	If(#buffer_value_app_id# > 0){
+		If(#res_type#=="pages"){
+			DBFind(pages, src).Custom(cbox){
+				Input(Name: cbox, Type: checkbox, Value: true, Disabled: 1)
+			}.Where("app_id = #buffer_value_app_id#").Order("id")
+		}
+		If(#res_type#=="blocks"){
+			DBFind(blocks, src).Custom(cbox){
+				Input(Name: cbox, Type: checkbox, Value: true, Disabled: 1)
+			}.Where("app_id = #buffer_value_app_id#").Order("id")
+		}
+		If(#res_type#=="menu"){
+			DBFind(menu, src).Custom(cbox){
+				Input(Name: cbox, Type: checkbox, Value: true, Disabled: 1)
+			}.Where("id in (#buffer_value_menu_id#)").Order("id")
+		}
+		If(#res_type#=="parameters"){
+			DBFind(app_params, src).Custom(cbox){
+				Input(Name: cbox, Type: checkbox, Value: true, Disabled: 1)
+			}.Where("app_id = #buffer_value_app_id#").Order("id")
+		}
+		If(#res_type#=="languages"){
+			DBFind(languages, src).Custom(cbox){
+				Input(Name: cbox, Type: checkbox, Value: true, Disabled: 1)
+			}.Where("app_id = #buffer_value_app_id#").Order("id")
+		}
+		If(#res_type#=="contracts"){
+			DBFind(contracts, src).Custom(cbox){
+				Input(Name: cbox, Type: checkbox, Value: true, Disabled: 1)
+			}.Where("app_id = #buffer_value_app_id#").Order("id")
+		}
+		If(#res_type#=="tables"){
+			DBFind(tables, src).Custom(cbox){
+				Input(Name: cbox, Type: checkbox, Value: true, Disabled: 1)
+			}.Where("app_id = #buffer_value_app_id#").Order("id")
+		}
+	}
+
+	Div(row){
+		Div(col-md-9 col-md-offset-0){
+			Table(src, "ID=id,Name=name,=cbox").Style(
+				tbody > tr:nth-of-type(odd) {
+					background-color: #fafbfc;
+				}
+				tbody > tr > td {
+					word-break: break-all;
+					padding: 8px 20px !important;
+					font-weight: 400;
+					font-size: 13px;
+					color: #666;
+					border-top: 1px solid #eee;
+					vertical-align: middle;
+				}
+				tr > *:first-child {
+					padding-left:20px;
+					width: 100px;
+				}
+				tr > *:last-child {
+					text-align:right;
+					padding-right:20px;
+					width: 50px;
+				}
+				thead {
+					background-color: #eee;
+				}
+			)
+		}
+		Div(col-md-3 col-md-offset-0){
+			Include(export_info)
+		}
+	}
 }
