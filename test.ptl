@@ -1,52 +1,41 @@
-Div(content-wrapper){
-	SetTitle("Applications")
-	Div(breadcrumb){
-		LinkPage("Applications", apps_list)
-		Span(/).Style(margin-right: 10px; margin-left: 10px;)
-		If(#id# > 0){
-			Span(Class: text-muted, Body: "Edit")
-		}.Else{
-			Span(Class: text-muted, Body: "New")
-		}
-	}
-	
-	Form(){
-		If(#id# > 0){
-			DBFind(applications, src_apps).Columns("id,name,conditions,deleted").Where("id=#id#").Vars("application")
-			Div(form-group){
-				Label("Name")
-				Input(Name: Name, Disabled: "true", Value: #application_name#)
-			}
-			Div(form-group){
-				Label("Change conditions")
-				Input(Name: Conditions, Value: #application_conditions#)
-			}
-			Div(form-group){
-				Div(row){
-					Div(text-left col-md-6){
-						Button(Body: "Save", Class: btn btn-primary, Page: apps_list, Contract: @1EditApplication, Params: "ApplicationId=#id#")
-					}
-					Div(text-right col-md-6){
-						If(#application_deleted# == 0){
-							Button(Body: "Delete", Class: btn btn-danger, Page: apps_list, Contract: @1DelApplication, Params: "ApplicationId=#application_id#,Value=1")
-						}
-					}
-				}
-			}
-		}.Else{
-			Div(form-group){
-				Label("Name")
-				Input(Name: Name)
-			}
-			Div(form-group){
-				Label("Change conditions")
-				Input(Name: Conditions)
-			}
-			Div(form-group){
-				Div(text-left){
-					Button(Body: "Save", Class: btn btn-primary, Page: apps_list, Contract: @1NewApplication)
-				}
-			}
-		}
-	}
+DBFind(buffer_data, src_buffer).Columns("value->app_id").Where("key='export' and member_id=#key_id#").Vars(buffer)
+If(#buffer_value_app_id# > 0){
+    DBFind(applications, src_app).Where("id=#buffer_value_app_id#").Vars("application")
+
+    Div(content-wrapper){
+        SetTitle("Language resources": #application_name#)
+        AddToolButton(Title: "Create", Page: langres_add, Icon: icon-plus, PageParams: "application_id=#application_id#")
+
+        SetVar(pager_table, languages).(pager_where, "app_id=#buffer_value_app_id#").(pager_page, app_langres).(pager_limit, 50)
+        Include(pager_header)
+
+        SetVar(admin_page, app_langres)
+        Include(admin_link)
+
+        DBFind(languages, src_languages).Limit(#pager_limit#).Order(#sort_name#).Offset(#pager_offset#).Where("app_id=#buffer_value_app_id#")
+
+        Form(panel panel-primary){
+            Div(panel-body){
+                Div(row){
+                    ForList(src_languages){
+                        Div(col-md-#width# col-sm-12){
+                            Div(list-group-item clearfix){
+                                Span(Class: mr-sm text-bold, Body: "#id#")
+                                #name#
+                                LinkPage(Class:fa fa-edit pull-right, Page: langres_edit, PageParams: "lang_id=#id#")
+                            }
+                        }
+                    }
+                }
+            }
+            Div(panel-footer){
+                Include(pager)
+            }
+        }
+    }
+}.Else{
+    SetTitle("Language resources")
+    Div(breadcrumb){
+        Span(Class: text-muted, Body: "You did not select the application. Viewing resources is not available")
+    }
 }
