@@ -1,6 +1,6 @@
 Div(content-wrapper){
-    SetTitle("Applications")
-    Div(breadcrumb){
+	SetTitle("Applications")
+	Div(breadcrumb){
 		LinkPage("Applications", apps_list)
 		Span(/).Style(margin-right: 10px; margin-left: 10px;)
 		If(#id# > 0){
@@ -8,7 +8,7 @@ Div(content-wrapper){
 		}.Else{
 			Span(Class: text-muted, Body: "New")
 		}
-    }
+	}
 	
 	Form(){
 		If(#id# > 0){
@@ -48,5 +48,5 @@ Div(content-wrapper){
 				}
 			}
 		}
-    }
+	}
 }
