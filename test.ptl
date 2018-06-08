@@ -12,7 +12,7 @@ If(GetVar(block)){
 
     Data(tables, "Table,Cols,Page"){
         contracts,"id,app_id,name,active",editor
-        pages,"id,app_id,name",editor
+        pages,"id,app_idll,name",editor
         blocks,"id,app_id,name",editor
         tables,"id,app_id,name",table_create
         app_params,"id,app_id,name,value",app_params_edit
