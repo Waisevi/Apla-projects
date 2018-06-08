@@ -1,47 +1,53 @@
-Div(content-wrapper){
-	If(#create# == create){
-		SetVar(param_name, "New")
-	}.Else{
-		DBFind(app_params, src_params).Where("id=#id#").Vars("param")
-	}
-	
-	SetTitle("Application parameter")
-	Div(Class: breadcrumb){
-		LinkPage("Application parameters", app_params)
-		Span(/).Style(margin-right: 10px; margin-left: 10px;)
-		Span(Class: text-muted, Body: #param_name#)
-	}
+DBFind(buffer_data, src_buffer).Columns("value->app_id").Where("key='export' and member_id=#key_id#").Vars(buffer)
+If(#buffer_value_app_id# > 0){
+    DBFind(applications, src_app).Where("id=#buffer_value_app_id#").Vars("application")
 
-	Form(){
-		Div(form-group){
-			Label("Name")
-			If(#create# == create){
-				Input(Name: name)
-			}.Else{
-				Input(Name: name, Value: #param_name#, Disabled: "true")
-			}
-		}
-		Div(form-group){
-			If(#create# == create){
-				Input(Type: textarea, Name: value).Style(height: 500px !important;)
-			}.Else{
-				Input(Type: textarea, Name: value, Value: "#param_value#").Style(height: 500px !important;)
-			}
-		}
-		Div(form-group){
-			Label("Change conditions")
-			If(#create# == create){
-				Input(Name: conditions)
-			}.Else{
-				Input(Name: conditions, Value: #param_conditions#)
-			}
-		}
-		Div(form-group){
-			If(#create# == create){
-				Button(Class: btn btn-primary, Body: "Save", Contract: @1NewAppParam, Params: "Name=Val(name),Value=Val(value),Conditions=Val(conditions),ApplicationId=#application_id#", Page: app_params)
-			}.Else{
-				Button(Class: btn btn-primary, Body: "Save", Contract: @1EditAppParam, Params: "Id=#id#,Value=Val(value),Conditions=Val(conditions)", Page: app_params)
-			}
-		}
-	}
+    Div(content-wrapper){
+        SetTitle("Tables": #application_name#)
+        AddToolButton(Title: "Create", Page: table_create, Icon: icon-plus, PageParams: "application_id=#application_id#")
+
+        SetVar(pager_table, tables).(pager_where, "app_id=#buffer_value_app_id#").(pager_page, app_tables).(pager_limit, 50)
+        Include(pager_header)
+
+        SetVar(admin_page, app_tables)
+        Include(admin_link)
+
+        DBFind(tables, src_tables).Limit(#pager_limit#).Order(#sort_name#).Offset(#pager_offset#).Where("app_id=#buffer_value_app_id#")
+
+        Form(panel panel-primary){
+            Div(panel-body){
+                Div(row){
+                    ForList(src_tables){
+                        Div(col-md-#width# col-sm-12){
+                            Div(list-group-item){
+                                Div(row){
+                                    Div(col-md-4){
+                                        Span(Class: h5 text-bold, Body: "#id#").Style(margin-right: 10px;)
+                                        LinkPage(Page: table_view, Class: text-primary h5, Body: "#name#", PageParams: "tabl_id=#id#")
+                                    }
+                                    Div(col-md-8){
+                                        Div(pull-right){
+                                            Span(LinkPage(Body: Em(Class: fa fa-edit), Class: text-primary h4, Page: table_edit, PageParams: "tabl_id=#id#"))
+                                        }
+                                        Div(pull-right){
+                                            DBFind(#name#).Columns("id").Count(countvar)
+                                            Span(Class: h5 text-muted, Body: #countvar#).Style(margin-right: 50px;)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Div(panel-footer clearfix){
+                Include(pager)
+            }
+        }
+    }
+}.Else{
+    SetTitle("Tables")
+    Div(breadcrumb){
+        Span(Class: text-muted, Body: "You did not select the application. Viewing resources is not available")
+    }
 }
