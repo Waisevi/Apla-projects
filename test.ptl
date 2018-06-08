@@ -1,15 +1,15 @@
 Div(content-wrapper){
-    SetTitle("Binary data")
-    Div(breadcrumb){
-        LinkPage("Binary data", app_binary)
-        Span(/).Style(margin-right: 10px; margin-left: 10px;)
+	SetTitle("Binary data")
+	Div(breadcrumb){
+		LinkPage("Binary data", app_binary)
+		Span(/).Style(margin-right: 10px; margin-left: 10px;)
 		If(#id# > 0){
 			Span("Edit", text-muted)
 			DBFind(binaries).Columns(name).Where(id = #id#).Vars(binary)
 		}.Else{
 			Span("Upload", text-muted)
 		}
-    }
+	}
 	
 	Form(){
 		Div(form-group){
@@ -31,5 +31,5 @@ Div(content-wrapper){
 		Div(form-group text-left){
 			Button(Body: "Upload", Contract: @1UploadBinary, Class: btn btn-primary, Params: "Name=Val(name),ApplicationId=#application_id#,Data=Val(databin),MemberID=#key_id#", Page: app_binary)
 		}
-    }
+	}
 }
