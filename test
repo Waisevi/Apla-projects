@@ -1,52 +1,47 @@
 Div(content-wrapper){
-	SetTitle("Applications")
-	Div(breadcrumb){
-		LinkPage("Applications", apps_list)
-		Span(/).Style(margin-right: 10px; margin-left: 10px;)
-		If(#id# > 0){
-			Span(Class: text-muted, Body: "Edit")
-		}.Else{
-			Span(Class: text-muted, Body: "New")
-		}
-	}
+    If(#create# == create){
+        SetVar(param_name, "New")
+    }.Else{
+		DBFind(app_params, src_params).Where("id=#id#").Vars("param")
+    }
 	
-	Form(){
-		If(#id# > 0){
-			DBFind(applications, src_apps).Columns("id,name,conditions,deleted").Where({id:#id#}).Vars("application")
-			Div(form-group){
-				Label("Name")
-				Input(Name: Name, Disabled: "true", Value: #application_name#)
-			}
-			Div(form-group){
-				Label("Change conditions")
-				Input(Name: Conditions, Value: #application_conditions#)
-			}
-			Div(form-group){
-				Div(row){
-					Div(text-left col-md-6){
-						Button(Body: "Save", Class: btn btn-primary, Page: apps_list, Contract: @1EditApplication, Params: "ApplicationId=#id#")
-					}
-					Div(text-right col-md-6){
-						If(#application_deleted# == 0){
-							Button(Body: "Delete", Class: btn btn-danger, Page: apps_list, Contract: @1DelApplication, Params: "ApplicationId=#application_id#,Value=1")
-						}
-					}
-				}
-			}
-		}.Else{
-			Div(form-group){
-				Label("Name")
-				Input(Name: Name)
-			}
-			Div(form-group){
-				Label("Change conditions")
-				Input(Name: Conditions)
-			}
-			Div(form-group){
-				Div(text-left){
-					Button(Body: "Save", Class: btn btn-primary, Page: apps_list, Contract: @1NewApplication)
-				}
-			}
-		}
+	SetTitle("Application parameter")
+	Div(Class: breadcrumb){
+		LinkPage("Application parameters", app_params)
+		Span(/).Style(margin-right: 10px; margin-left: 10px;)
+		Span(Class: text-muted, Body: #param_name#)
 	}
+
+    Form(){
+        Div(form-group){
+            Label("Name")
+            If(#create# == create){
+                Input(Name: name)
+            }.Else{
+                Input(Name: name, Value: #param_name#, Disabled: "true")
+            }
+        }
+        Div(form-group){
+            If(#create# == create){
+                Input(Type: textarea, Name: value).Style(height: 500px !important;)
+            }.Else{
+                Input(Type: textarea, Name: value, Value: "#param_value#").Style(height: 500px !important;)
+            }
+        }
+        Div(form-group){
+            Label("Change conditions")
+            If(#create# == create){
+                Input(Name: conditions)
+            }.Else{
+                Input(Name: conditions, Value: #param_conditions#)
+            }
+        }
+        Div(form-group){
+            If(#create# == create){
+                Button(Class: btn btn-primary, Body: "Save", Contract: @1NewAppParam, Params: "Name=Val(name),Value=Val(value),Conditions=Val(conditions),ApplicationId=#application_id#", Page: app_params)
+            }.Else{
+                Button(Class: btn btn-primary, Body: "Save", Contract: @1EditAppParam, Params: "Id=#id#,Value=Val(value),Conditions=Val(conditions)", Page: app_params)
+            }
+        }
+    }
 }
