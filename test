@@ -1,47 +1,46 @@
 Div(content-wrapper){
-	If(#create# == create){
-		SetVar(param_name, "New")
-	}.Else{
-		DBFind(app_params, src_params).Where({id:#id#}).Vars("param")
-	}
-	
-	SetTitle("Application parameter")
-	Div(Class: breadcrumb){
-		LinkPage("Application parameters", app_params)
-		Span(/).Style(margin-right: 10px; margin-left: 10px;)
-		Span(Class: text-muted, Body: #param_name#)
+	SetTitle("Tables")
+	Div(breadcrumb){
+		Div(){
+			LinkPage("Tables", app_tables)
+			Span(/).Style(margin-right: 10px; margin-left: 10px;)
+			LinkPage("Edit table", table_edit, PageParams:"tabl_id=#tabl_id#")
+			Span(/).Style(margin-right: 10px; margin-left: 10px;)
+			Span("Add column", text-muted)
+		}
 	}
 
-	Form(){
-		Div(form-group){
-			Label("Name")
-			If(#create# == create){
-				Input(Name: name)
-			}.Else{
-				Input(Name: name, Value: #param_name#, Disabled: "true")
+	Form(panel panel-default){
+		Div(panel-body){
+			Div(form-group){
+				Label("Column")
+				Input(Name: ColumnName)
+			}
+			Div(form-group){
+				Data(src_type,"type,name"){
+					text,"Text"
+					number,"Number"
+					varchar,"Varchar"
+					datetime,"Date/Time"
+					money,"Money"
+					double,"Double"
+					character,"Character"
+					json,"JSON"
+				}
+				Label("Type")
+				Select(Name: Coltype, Source: src_type, NameColumn: name, ValueColumn: type, Value:"text")
+			}
+			Div(form-group){
+				Label("Update")
+				Input(Name: UpdateColumn, Value: "true")
+			}
+			Div(form-group){
+				Label("Read")
+				Input(Name: ReadColumn, Value: "true")
 			}
 		}
-		Div(form-group){
-			If(#create# == create){
-				Input(Type: textarea, Name: value).Style(height: 500px !important;)
-			}.Else{
-				Input(Type: textarea, Name: value, Value: "#param_value#").Style(height: 500px !important;)
-			}
-		}
-		Div(form-group){
-			Label("Change conditions")
-			If(#create# == create){
-				Input(Name: conditions)
-			}.Else{
-				Input(Name: conditions, Value: #param_conditions#)
-			}
-		}
-		Div(form-group){
-			If(#create# == create){
-				Button(Class: btn btn-primary, Body: "Save", Contract: @1NewAppParam, Params: "Name=Val(name),Value=Val(value),Conditions=Val(conditions),ApplicationId=#application_id#", Page: app_params)
-			}.Else{
-				Button(Class: btn btn-primary, Body: "Save", Contract: @1EditAppParam, Params: "Id=#id#,Value=Val(value),Conditions=Val(conditions)", Page: app_params)
-			}
+		Div(panel-footer clearfix){
+			Button(Body: "Add column", Contract: @1NewColumn, Class: btn btn-primary, Page: table_edit, PageParams: "tabl_id=#tabl_id#", Params: "TableName=#next_table_name#,Name=Val(ColumnName),Type=Val(Coltype),UpdatePerm=Val(UpdateColumn),ReadPerm=Val(ReadColumn)")
 		}
 	}
 }
