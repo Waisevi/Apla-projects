@@ -1,51 +1,51 @@
-DBFind(buffer_data, src_buffer).Columns("value->app_id").Where({key: export, member_id:#key_id#}).Vars(buffer)
-If(#buffer_value_app_id# > 0){
-	DBFind(applications, src_app).Where({id:#buffer_value_app_id#}).Vars("application")
+Div(content-wrapper){
+    DBFind(buffer_data, src_buffer).Columns("id,value->name,value->data").Where({key:import,member_id:#key_id#}).Vars(hash00001)
+    DBFind(buffer_data, src_buffer).Columns("value->app_name,value->pages,value->pages_count,value->blocks,value->blocks_count,value->menu,value->menu_count,value->parameters,value->parameters_count,value->languages,value->languages_count,value->contracts,value->contracts_count,value->tables,value->tables_count").Where({key:import_info,member_id:#key_id#}).Vars(hash00002)
 
-	Div(content-wrapper){
-		SetTitle("Binary data": #application_name#)
-		AddToolButton(Title: "Upload binary", Page: app_upload_binary, Icon: icon-plus, PageParams: "application_id=#application_id#")
+    SetTitle("Import - #hash00002_value_app_name#")
+    Data(data_info, "hash00003_name,hash00003_count,hash00003_info"){
+        Pages,"#hash00002_value_pages_count#","#hash00002_value_pages#"
+        Blocks,"#hash00002_value_blocks_count#","#hash00002_value_blocks#"
+        Menu,"#hash00002_value_menu_count#","#hash00002_value_menu#"
+        Parameters,"#hash00002_value_parameters_count#","#hash00002_value_parameters#"
+        Language resources,"#hash00002_value_languages_count#","#hash00002_value_languages#"
+        Contracts,"#hash00002_value_contracts_count#","#hash00002_value_contracts#"
+        Tables,"#hash00002_value_tables_count#","#hash00002_value_tables#"
+    }
+    Div(breadcrumb){
+        Span(Class: text-muted, Body: "Your data that you can import")
+    }
 
-		SetVar(pager_table, binaries).(pager_where, "{app_id:#buffer_value_app_id#}").(pager_page, app_binary).(pager_limit, 50)
-		Include(pager_header)
-
-		SetVar(admin_page, app_binary)
-		Include(admin_link)
-
-		DBFind(binaries, src_binparameters).Limit(#pager_limit#).Order(#sort_name#).Offset(#pager_offset#).Where({app_id:#buffer_value_app_id#})
-
-		Form(panel panel-primary){
-			Div(panel-body){
-				Div(row){
-					ForList(src_binparameters){
-						Div(col-md-#width# col-sm-12){
-							Div(list-group-item){
-								Div(row){
-									Div(col-md-4){
-										Span(Class: h5 text-bold, Body: "#id#").Style(margin-right: 10px;)
-										If(#member_id# == #key_id#){
-											LinkPage(Class: text-primary h5, Body: #name#, Page: app_upload_binary, PageParams: "id=#id#,application_id=#buffer_value_app_id#")
-										}.Else{
-											Span(Class: h5, Body: #name#)
-										}
-									}
-									Div(col-md-8 text-right){
-										Span(#hash#)
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			Div(panel-footer clearfix){
-				Include(pager)
-			}
-		}
-	}
-}.Else{
-	SetTitle("Binary data")
-	Div(breadcrumb){
-		Span(Class: text-muted, Body: "You did not select the application. Viewing resources is not available")
-	}
+    Div(panel panel-primary){
+        ForList(data_info){
+            Div(list-group-item){
+                Div(row){
+                    Div(col-md-10 mc-sm text-left){
+                        Span(Class: text-bold, Body: "#hash00003_name#")
+                    }
+                    Div(col-md-2 mc-sm text-right){
+                        If(#hash00003_count# > 0){
+                            Span(Class: text-bold, Body: "(#hash00003_count#)")
+                        }.Else{
+                            Span(Class: text-muted, Body: "(0)")
+                        }
+                    }
+                }
+                Div(row){
+                    Div(col-md-12 mc-sm text-left){
+                        If(#hash00003_count# > 0){
+                            Span(Class: h6, Body: "#hash00003_info#")
+                        }.Else{
+                            Span(Class: text-muted h6, Body: "Nothing selected")
+                        }
+                    }
+                }
+            }
+        }
+        If(#hash00001_id# > 0){
+            Div(list-group-item text-right){
+                Button(Body: "Import", Class: btn btn-primary, Page: apps_list).CompositeContract(@1Import, "#hash00001_value_data#")
+            }
+        }
+    }
 }
