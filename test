@@ -1,50 +1,46 @@
-DBFind(buffer_data, src_buffer).Columns("value->app_id").Where({key:export,member_id:#key_id#}).Vars(buffer)
+DBFind(buffer_data, src_buffer).Columns("value->app_id").Where("key='export' and member_id=#key_id#").Vars(buffer)
 If(#buffer_value_app_id# > 0){
-	DBFind(applications, src_app).Where({id:#buffer_value_app_id#}).Vars("application")
+    DBFind(applications, src_app).Where("id=#buffer_value_app_id#").Vars("application")
 
-	Div(content-wrapper){
-		SetTitle("Pages": #application_name#)
-		AddToolButton(Title: "Create", Page: editor, Icon: icon-plus, PageParams: "create=page,appId=#buffer_value_app_id#")
+    Div(content-wrapper){
+        SetTitle("Language resources": #application_name#)
+        AddToolButton(Title: "Create", Page: langres_add, Icon: icon-plus, PageParams: "application_id=#application_id#")
 
-		SetVar(pager_table, pages).(pager_where, "{app_id:#buffer_value_app_id#}").(pager_page, app_pages).(pager_limit, 50)
-		Include(pager_header)
+        SetVar(pager_table, languages).(pager_where, "app_id=#buffer_value_app_id#").(pager_page, app_langres).(pager_limit, 50)
+        Include(pager_header)
 
-		SetVar(admin_page, app_pages)
-		Include(admin_link)
+        SetVar(admin_page, app_langres)
+        Include(admin_link)
 
-		DBFind(pages, src_pages).Limit(#pager_limit#).Order(#sort_name#).Offset(#pager_offset#).Where({app_id:#buffer_value_app_id#})
+        DBFind(languages, src_languages).Limit(#pager_limit#).Order(#sort_name#).Offset(#pager_offset#).Where("app_id=#buffer_value_app_id#")
 
-		Form(panel panel-primary){
-			Div(panel-body){
-				Div(row){
-					ForList(src_pages){
-						Div(col-md-#width# col-sm-12){
-							Div(list-group-item){
-								Div(row){
-									Div(col-md-4){
-										Span(Class: h5 text-bold, Body: "#id#").Style(margin-right: 10px;)
-										LinkPage(Page: #name#, Class: text-primary h5, Body: "#name#")
-									}
-									Div(col-md-8){
-										Div(pull-right){
-											Span(LinkPage(Body: Em(Class: fa fa-cogs), Class: text-primary h4, Page: properties_edit, PageParams: "edit_property_id=#id#,type=page")).Style(margin-right: 15px;)
-											Span(LinkPage(Body: Em(Class: fa fa-edit), Class: text-primary h4, Page: editor, PageParams: "open=page,name=#name#"))
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			Div(panel-footer clearfix){
-				Include(pager)
-			}
-		}
-	}
+        Form(panel panel-primary){
+            SetVar(cols,Calculate(12/#width#))
+            Div(panel-body){
+                Div(cols){
+                    ForList(src_languages){
+                        Div(list-group-item clearfix){
+                            Span(#id#,mr-sm text-bold).(#name#,mr-sm).(`#res#`,text-muted)
+                            LinkPage(Class:fa fa-edit pull-right, Page: langres_edit, PageParams: "lang_id=#id#")
+                        }
+                    }
+                }
+            }.Style(
+                .cols {
+                    -moz-column-count: #cols#;
+                    -webkit-column-count: #cols#;
+                    column-count: #cols#;
+                }
+            )
+
+            Div(panel-footer){
+                Include(pager)
+            }
+        }
+    }
 }.Else{
-	SetTitle("Pages")
-	Div(breadcrumb){
-		Span(Class: text-muted, Body: "You did not select the application. Viewing resources is not available")
-	}
+    SetTitle("Language resources")
+    Div(breadcrumb){
+        Span(Class: text-muted, Body: "You did not select the application. Viewing resources is not available")
+    }
 }
