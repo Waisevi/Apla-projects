@@ -2,8 +2,8 @@
   "title": "The Basics",
   "description": "App view",
   "pages": [
-    { "id": "1", "name": "Block_Cron_Edit", "menu": "default_page", "conditions": "true" },
-    { "id": "2", "name": "Block_Cron_List", "menu": "default_page", "conditions": "true" },
-    { "id": "3", "name": "Block_Cron_Create", "menu": "default_page", "conditions": "true"}
+    { "id": "1", "names": "Block_Cron_Edit", "menu": "default_page", "conditions": "true" },
+    { "id": "2", "names": "Block_Cron_List", "menu": "default_page", "conditions": "true" },
+    { "id": "3", "names": "Block_Cron_Create", "menu": "default_page", "conditions": "true" }
   ]
 }
