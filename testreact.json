@@ -1,9 +1,11 @@
 {
-  "title": "The Basics",
-  "description": "App view",
-  "pages": [
-    { "id": "1", "names": "Block_Cron_Edit", "menu": "default_page", "conditions": "true" },
-    { "id": "2", "names": "Block_Cron_List", "menu": "default_page", "conditions": "true" },
-    { "id": "3", "names": "Block_Cron_Create", "menu": "default_page", "conditions": "true" }
+  "title": "The Basics - Networking",
+  "description": "Your app fetched this from a remote endpoint!",
+  "movies": [
+    { "id": "1", "name": "Star Wars", "releaseYear": "1977" },
+    { "id": "2", "name": "Back to the Future", "releaseYear": "1985" },
+    { "id": "3", "name": "The Matrix", "releaseYear": "1999" },
+    { "id": "4", "name": "Inception", "releaseYear": "2010" },
+    { "id": "5", "name": "Interstellar", "releaseYear": "2014" }
   ]
 }
