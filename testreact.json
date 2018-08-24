@@ -4,6 +4,7 @@
   "pages": [
     { "id": "1", "name": "Block_Cron_Edit" },
     { "id": "2", "name": "Block_Cron_List" },
-    { "id": "3", "name": "Block_Cron_Create" }
+    { "id": "3", "name": "Block_Cron_Create" },
+    { "id": "4", "name": "Block_Cron_View" }
   ]
 }
