@@ -1,0 +1,7 @@
+{
+  "pages": [
+    { "id": "1", "Name": "Block_Cron_Edit", "Menu": "default_page", "Conditions": "true" },
+    { "id": "2", "Name": "Block_Cron_List", "Menu": "default_page", "Conditions": "true" },
+    { "id": "3", "Name": "Block_Cron_Create", "Menu": "default_page", "Conditions": "true"}
+  ]
+}
